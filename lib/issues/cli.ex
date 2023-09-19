@@ -19,7 +19,14 @@ defmodule Issues.CLI do
   end
 
   def process({user, project, _count}) do
-    Issues.GithubIssues.fetch(user, project) |> decode_response
+    Issues.GithubIssues.fetch(user, project) |> decode_response |> sort_issues()
+  end
+
+  def sort_issues(issues_list, opts \\ [{:order, :desc}, {:field, "created_at"}]) do
+    order = opts[:order] || :desc
+    field = opts[:field] || "created_at"
+
+    issues_list |> Enum.sort_by(fn issue -> issue[field] end, order)
   end
 
   def decode_response({:ok, body}), do: body
