@@ -1,6 +1,8 @@
 defmodule Issues.CLI do
   @default_count 4
 
+  import Issues.TableFormatter, only: [print_table_for_columns: 2]
+
   @moduledoc """
   Handle the command line intefarface for `Issues`.
   """
@@ -23,6 +25,7 @@ defmodule Issues.CLI do
     |> decode_response
     |> sort_issues()
     |> Enum.take(count)
+    |> print_table_for_columns(["number", "created_at", "title"])
   end
 
   def sort_issues(issues_list, opts \\ [{:order, :desc}, {:field, "created_at"}]) do
