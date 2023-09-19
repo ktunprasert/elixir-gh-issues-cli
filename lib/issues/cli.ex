@@ -6,7 +6,7 @@ defmodule Issues.CLI do
   @moduledoc """
   Handle the command line intefarface for `Issues`.
   """
-  def run(argv), do: argv |> parse_args |> process
+  def main(argv), do: argv |> parse_args |> process
 
   def process(:help) do
     IO.puts("""
