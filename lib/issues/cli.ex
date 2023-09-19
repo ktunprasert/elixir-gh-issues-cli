@@ -7,24 +7,17 @@ defmodule Issues.CLI do
   def run(argv), do: parse_args(argv)
 
   def parse_args(argv) do
-    parse =
-      OptionParser.parse(argv,
-        switches: [help: :boolean],
-        aliases: [h: :help, v: :version]
-      )
-
-    case parse do
-      {[help: true], _, _} ->
-        :help
-
-      {_, [user, project, count], _} ->
-        {user, project, count |> String.to_integer}
-
-      {_, [user, project], _} ->
-        {user, project, @default_count}
-
-      _ ->
-        :help
-    end
+    OptionParser.parse(argv,
+      switches: [help: :boolean],
+      aliases: [h: :help, v: :version]
+    )
+    |> elem(1)
+    |> args_to_internal_representation()
   end
+
+  def args_to_internal_representation([user, project, count]),
+    do: {user, project, count |> String.to_integer()}
+
+  def args_to_internal_representation([user, project]), do: {user, project, @default_count}
+  def args_to_internal_representation(_), do: :help
 end
