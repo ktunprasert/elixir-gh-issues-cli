@@ -4,7 +4,18 @@ defmodule Issues.CLI do
   @moduledoc """
   Handle the command line intefarface for `Issues`.
   """
-  def run(argv), do: parse_args(argv)
+  def run(argv), do: argv |> parse_args |> process
+
+  def process(:help) do
+    IO.puts("""
+      usage: issues <user> <project> [count]
+      where:
+        <user> is a GitHub user name
+        <project> is a GitHub project name
+        [count] is an optional number of issues to display (default #{@default_count})
+    """)
+    System.halt(0)
+  end
 
   def parse_args(argv) do
     OptionParser.parse(argv,
