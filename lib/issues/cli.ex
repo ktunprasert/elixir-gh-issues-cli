@@ -14,7 +14,19 @@ defmodule Issues.CLI do
         <project> is a GitHub project name
         [count] is an optional number of issues to display (default #{@default_count})
     """)
+
     System.halt(0)
+  end
+
+  def process({user, project, _count}) do
+    Issues.GithubIssues.fetch(user, project) |> decode_response
+  end
+
+  def decode_response({:ok, body}), do: body
+
+  def decode_response({:error, error}) do
+    IO.puts("Error fetching issues from Github: #{error["message"]}")
+    System.halt(2)
   end
 
   def parse_args(argv) do
